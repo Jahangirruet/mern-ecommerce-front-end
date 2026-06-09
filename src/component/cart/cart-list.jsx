@@ -1,60 +1,83 @@
 import React, {useEffect} from 'react';
-import ProductsSkeleton from "../../skeleton/products-skeleton.jsx";
+import CartListSkeleton from "../../skeleton/CartList-skeleton.jsx";
 import CartStore from "../../store/CartStore.js";
 import NoData from "../NoData.jsx";
 import {Link} from "react-router-dom";
+import CartSubmitButton from "./CartSubmitButton.jsx";
 
 const CartList = () => {
 
-    const {CartList,CartListRequest} = CartStore()
-    console.log(CartList);
+    const {CartTotal,CartVatTotal,CartPayableTotal,RemoveCartListRequest,CartList,CreateInvoiceRequest,CartListRequest} = CartStore()
     useEffect(() => {
         (async () => {
             await CartListRequest();
         })()
     }, []);
 
+    const remove = async(cartID)=>{
+        await RemoveCartListRequest(cartID)
+        await CartListRequest()
+    }
+
 
     if(CartList===null){
         return (
             <div className="content">
                 <div className="row">
-                    <ProductsSkeleton/>
+                    <CartListSkeleton/>
                 </div>
             </div>
         )
-    }else if(CartList===0){
+    }else if(CartList.length===0){
         return (<NoData />)
     } else{
         return (
             <div className="container mt-3">
                 <div className="row">
-                    {
-                        CartList.map((item,index)=>{
-                            let price = <p className="bodyMedium text-dark my-1">Price:{item['product']['price']}</p>;
-                            if(item['product']['discount']===true){
-                                price = <p className="bodyMedium text-dark my-1">Price:
-                                    <strike>{item['product']['price']}</strike> {item['product']['discountPrice']} </p>;
-                            }
-                            return(
-                                <div key={index} className="col-md-3 p-2 col-lg-3 col-sm-6 col-12">
-                                    <div className="card shadow-sm h-100 rounded-3 bg-white">
-                                        <img alt="img" className="w-100 rounded-top-2" src={item['product']['image']} />
-                                        <div className="card-body">
-                                            <p className="bodySmal text-secondary my-1">{item['product']['title']}</p>
-                                            {price}
-                                            {/*<StarRatings rating={parseFloat(item['product']['star'])} starRatedColor="red" starDimension="15px" starSpacing="2px" />*/}
-                                            <p className="mt-3">
-                                                <button className="btn btn-outline-danger btn-sm" onClick={async ()=>{await remove(item['productID'])}} >Remove</button>
-                                                <Link to={`/details/${item['productID']}`} className="btn mx-2 btn-outline-primary btn-sm">Details</Link>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div className="col-md-12">
+                        <div className="card p-4">
+                            <ul className="list-group list-group-flush">
+                                {
+                                    CartList.map((item,i)=>{
+                                        let price = item['product']['price']
+                                        if(item['product']['discountPrice']===true){
+                                            price = item['product']['discountPrice'];
+                                        }
 
-                            )
-                        })
-                    }
+                                        return(
+                                    <li className="list-group-item d-flex justify-content-between align-items-start">
+                                        <img alt="img" className="rounded-1" width="90" height="auto" src={item['product']['image']} />
+                                            <div className="ms-2 me-auto">
+                                                <p className="fw-lighter m-0">{item['product']['title']}</p>
+                                                <p className="fw-lighter my-1">Unit Price: {price},Qty: {item['qty']}, Size: {item['size']},
+                                                Color: {item['color']}</p>
+                                                <p className=" h6 fw-bold m-0 text-dark">Total <i className="bi bi-currency-dollar"></i>
+                                                {parseInt(price)*parseInt(item['qty'])} </p>
+                                            </div>
+                                        <button onClick={()=>remove(item['_id'])} className="btn btn-sm btn-outline-danger">
+                                            <i className="bi bi-trash"></i></button>
+                                    </li> )})
+                            }
+                            </ul>
+                            <div className="my-4">
+                                <ul className="list-group bg-transparent list-group-flush">
+                                    <li className="list-group-item bg-transparent h6 m-0 text-dark">
+                                        <span className="float-end">Total: <i className="bi bi-currency-dollar" />{CartTotal} </span>
+                                    </li>
+                                    <li className="list-group-item bg-transparent h6 m-0 text-dark">
+                                        <span className="float-end"> Vat(5%): <i className="bi bi-currency-dollar" />{CartVatTotal}</span>
+                                    </li>
+                                    <li className="list-group-item bg-transparent h6 m-0 text-dark">
+                                        <span className="float-end"> Payable: <i className="bi bi-currency-dollar" />{CartPayableTotal}</span>
+                                    </li>
+                                    <li className="list-group-item bg-transparent ">
+                                        <span className="float-end">
+                                            <CartSubmitButton text="Check Out " onClick={async ()=> {await CreateInvoiceRequest()}} className="btn px-5 mt-2 btn-success"/></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

@@ -15,6 +15,7 @@ const WishList = () => {
 
     const remove = async(productID) =>{
         await RemoveWishListRequest(productID);
+        await WishListRequest();
     }
 
     if(WishList===null){

@@ -1,13 +1,13 @@
 import React from 'react';
-import OtpForm from "../component/user/otp-form.jsx";
 import Layout from "../component/layout/layout.jsx";
+import SignupForm from "../component/user/Signup-form.jsx";
 
-const OtpPage = () => {
+const SignupPage = () => {
     return (
         <Layout>
-            <OtpForm />
+            <SignupForm />
         </Layout>
     );
 };
 
-export default OtpPage;
+export default SignupPage;

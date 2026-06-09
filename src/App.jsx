@@ -12,10 +12,12 @@ import HowToBuyPage from "./pages/how-to-buy-page.jsx";
 import ContactPage from "./pages/contact-page.jsx";
 import ComplainPage from "./pages/complain-page.jsx";
 import LoginPage from "./pages/login-page.jsx";
-import OtpPage from "./pages/otp-page.jsx";
 import ProfilePage from "./pages/profile-page.jsx";
 import WishPage from "./pages/wish-page.jsx";
 import CartPage from "./pages/cart-page.jsx";
+import OrderPage from "./pages/order-page.jsx";
+import InvoicePage from "./pages/invoice-page.jsx";
+import SignupPage from "./pages/Signup-page.jsx";
 
 
 
@@ -38,12 +40,12 @@ function App() {
                 <Route path="/complain" element={<ComplainPage />} />
 
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/otp" element={<OtpPage />} />
+                <Route path="/signup" element={<SignupPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/wish" element={<WishPage />} />
                 <Route path="/cart" element={<CartPage />} />
-
-
+                <Route path="/orders" element={<OrderPage />} />
+                <Route path="/invoice/:id" element={<InvoicePage />} />
             </Routes>
         </BrowserRouter>
     </>

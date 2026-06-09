@@ -27,7 +27,7 @@ const WishStore = create((set)=>({
             set({WishList:res.data['data']});
             set({WishCount: (res.data['data']).length});
         } catch(e){
-            //unauthorized(e.response.status);
+            unauthorized(e.response.status);
             console.log(e);
         } finally{
             set({isWishSubmit:false});

@@ -14,17 +14,20 @@ const AppNavBar = () => {
     const { isLogin,UserLogOutRequest } = UserStore()
     const { CartCount,CartListRequest } = CartStore();
     const {WishCount,WishListRequest} =WishStore()
-    //const navigate = useNavigate()
 
+
+
+    //const navigate = useNavigate()   // ← uncomment this
 
     const onLogout = async () => {
-        await UserLogOutRequest;
-        sessionStorage.clear();
-        localStorage.clear();
-        //navigate("/");
-        console.log("logout")
-   }
-
+        const success = await UserLogOutRequest();
+        if (success) {
+            sessionStorage.clear();
+            localStorage.clear();
+        } else {
+            console.log("Logout failed");
+        }
+    }
 useEffect(() => {
     (async () => {
         if(isLogin()){
@@ -76,7 +79,9 @@ useEffect(() => {
                     <div className="collapse navbar-collapse" id="nav06">
                         <ul className="navbar-nav mt-3 mt-lg-0 mb-3 mb-lg-0 ms-lg-3">
                             <span className="nav-item me-4">
-                                <Link className="nav-link" to="/">Home</Link>
+                                <Link className="nav-link"  to="/">
+                                <i className="bi text-dark bi-house"></i>Home
+                                </Link>
                             </span>
                         </ul>
                     </div>
@@ -94,12 +99,11 @@ useEffect(() => {
                             isLogin()?(
                                 <>
                                     <Link to="/cart" type="button" className="btn ms-2 btn-light position-relative">
-                                        <i className="bi text-dark bi-bag"></i>
+                                        <i className="bi text-dark bi-cart"></i>
                                         <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
                                             {CartCount}
                                         <span className="visually-hidden">unread message</span>
                                         </span>
-
                                     </Link>
                                     <Link to="/wish" type="button" className="btn ms-2 btn-light position-relative">
                                         <i className="bi text-dark bi-heart"></i>
@@ -108,11 +112,24 @@ useEffect(() => {
                                             <span className="visually-hidden">unread message</span>
                                         </span>
                                     </Link>
+                                    <Link to="/orders" type="button" className="btn ms-2 btn-light position-relative">
+                                        <i className="bi text-dark bi-bag"></i>
+                                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+
+                                            <span className="visually-hidden">unread message</span>
+                                        </span>
+                                    </Link>
                                 <UserSubmitButton text="Logout" onClick={onLogout} className="btn ms-3 btn-success d-flex" />
                                         <Link type="button" className="btn ms-3 btn-success d-flex" to="/profile">Profile</Link>
                                 </>
                                 ):
-                                (<Link type="button" className="btn ms-3 btn-success d-flex" to="/login">Login</Link>)
+                                (<>
+                                        <Link type="button" className="btn ms-3 btn-success d-flex" to="/login">Login</Link>
+                                        <Link type="button" className="btn ms-3 btn-success d-flex" to="/signup">Signup</Link>
+                                    </>
+
+                                )
+
                         }
                     </div>
                 </div>
